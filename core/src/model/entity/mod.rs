@@ -1,5 +1,4 @@
-use crate::ware::Ware;
-use crate::entity::recipe::Recipe;
+use crate::model::{entity::recipe::Recipe, ware::Ware};
 
 pub mod recipe;
 
@@ -12,7 +11,11 @@ pub struct Entity {
 
 impl Entity {
     pub fn new(name: String, recipes: Vec<Recipe>) -> Self {
-        Entity {name, wares: Default::default(), recipes}
+        Entity {
+            name,
+            wares: Default::default(),
+            recipes,
+        }
     }
 
     pub fn wares(&self) -> &[Ware] {

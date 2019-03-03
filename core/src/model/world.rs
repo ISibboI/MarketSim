@@ -1,5 +1,7 @@
-use crate::{entity::Entity, market::Market};
-use crate::entity::recipe::Recipe;
+use crate::model::{
+    entity::{recipe::Recipe, Entity},
+    market::Market,
+};
 
 pub type EntityId = usize;
 

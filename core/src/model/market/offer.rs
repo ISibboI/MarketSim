@@ -1,5 +1,4 @@
-use crate::ware::Ware;
-use crate::world::EntityId;
+use crate::model::{ware::Ware, world::EntityId};
 
 #[derive(Default, Debug, Clone)]
 pub struct Offer {
@@ -10,7 +9,11 @@ pub struct Offer {
 
 impl Offer {
     pub fn new(offer: Ware, price: Ware, seller_entity_id: EntityId) -> Self {
-        Self {offer, price, seller_entity_id}
+        Self {
+            offer,
+            price,
+            seller_entity_id,
+        }
     }
 
     pub fn offer(&self) -> &Ware {

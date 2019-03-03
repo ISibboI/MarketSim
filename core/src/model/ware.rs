@@ -22,7 +22,7 @@ pub struct Ware {
 
 impl Ware {
     pub fn new(ware_type: WareType, amount: WareAmount) -> Self {
-        Self {ware_type, amount}
+        Self { ware_type, amount }
     }
 
     pub fn ware_type(&self) -> WareType {

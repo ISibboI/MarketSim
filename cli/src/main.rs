@@ -3,13 +3,14 @@ extern crate core;
 extern crate log;
 extern crate simplelog;
 
-use core::world::World;
+use core::model::{
+    entity::recipe::Recipe,
+    ware::{Ware, WareType},
+    world::World,
+};
 use log::LevelFilter;
 use simplelog::{CombinedLogger, Config, TermLogger, WriteLogger};
 use std::fs::File;
-use core::entity::recipe::Recipe;
-use core::ware::Ware;
-use core::ware::WareType;
 
 fn init_loggers() {
     CombinedLogger::init(vec![
@@ -30,7 +31,10 @@ fn main() {
     init_loggers();
 
     let mut world = World::new();
-    world.create_entity("Human", &[Recipe::new(vec![Ware::new(WareType::Food, 1)], Vec::new())]);
+    world.create_entity(
+        "Human",
+        &[Recipe::new(vec![Ware::new(WareType::Food, 1)], Vec::new())],
+    );
 
     info!("\n{:?}", world);
 

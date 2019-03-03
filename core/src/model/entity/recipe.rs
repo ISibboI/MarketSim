@@ -1,4 +1,4 @@
-use crate::ware::Ware;
+use crate::model::ware::Ware;
 
 #[derive(Clone, Debug, Default)]
 pub struct Recipe {
@@ -8,7 +8,7 @@ pub struct Recipe {
 
 impl Recipe {
     pub fn new(inputs: Vec<Ware>, outputs: Vec<Ware>) -> Self {
-        Recipe {inputs, outputs}
+        Recipe { inputs, outputs }
     }
 
     pub fn inputs(&self) -> &[Ware] {
