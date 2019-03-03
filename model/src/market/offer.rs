@@ -1,4 +1,4 @@
-use crate::model::{ware::Ware, world::EntityId};
+use crate::{ware::Ware, world::EntityId};
 
 #[derive(Default, Debug, Clone)]
 pub struct Offer {

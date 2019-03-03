@@ -1,4 +1,4 @@
-use crate::model::ware::Ware;
+use crate::ware::Ware;
 
 #[derive(Clone, Debug, Default)]
 pub struct Recipe {

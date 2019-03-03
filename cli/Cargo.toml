@@ -5,6 +5,6 @@ authors = ["Sebastian Schmidt <isibboi@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-core = {path = "../core"}
+model = {path = "../model"}
 log = "0.4"
 simplelog = "0.5"

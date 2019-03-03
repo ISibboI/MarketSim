@@ -1,4 +1,4 @@
-use crate::model::market::offer::Offer;
+use crate::market::offer::Offer;
 
 pub mod offer;
 

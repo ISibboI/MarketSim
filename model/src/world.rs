@@ -1,4 +1,4 @@
-use crate::model::{
+use crate::{
     entity::{recipe::Recipe, Entity},
     market::Market,
 };

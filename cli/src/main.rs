@@ -1,9 +1,9 @@
-extern crate core;
+extern crate model;
 #[macro_use]
 extern crate log;
 extern crate simplelog;
 
-use core::model::{
+use model::{
     entity::recipe::Recipe,
     ware::{Ware, WareType},
     world::World,

@@ -1,4 +1,4 @@
-use crate::model::{entity::recipe::Recipe, ware::Ware};
+use crate::{entity::recipe::Recipe, ware::Ware};
 
 pub mod recipe;
 
