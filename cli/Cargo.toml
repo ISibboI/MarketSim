@@ -1,0 +1,10 @@
+[package]
+name = "cli"
+version = "0.1.0"
+authors = ["Sebastian Schmidt <isibboi@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+core = {path = "../core"}
+log = "0.4"
+simplelog = "0.5"
