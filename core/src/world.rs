@@ -1,4 +1,7 @@
 use crate::{entity::Entity, market::Market};
+use crate::entity::recipe::Recipe;
+
+pub type EntityId = usize;
 
 #[derive(Clone, Debug, Default)]
 pub struct World {
@@ -6,6 +9,7 @@ pub struct World {
     market: Market,
 }
 
+// Creators
 impl World {
     pub fn new() -> Self {
         trace!("Created new world");
@@ -13,6 +17,18 @@ impl World {
         Default::default()
     }
 
+    pub fn create_entity(&mut self, name: &str, recipes: &[Recipe]) -> EntityId {
+        let entity = Entity::new(name.to_owned(), recipes.to_owned());
+        let entity_id = self.entities.len() as EntityId;
+        trace!("Creating entity {:?} with id {:?}", entity, entity_id);
+
+        self.entities.push(entity);
+        entity_id
+    }
+}
+
+// Getters
+impl World {
     pub fn entities(&self) -> &[Entity] {
         &self.entities
     }
