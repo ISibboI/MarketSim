@@ -31,12 +31,14 @@ fn main() {
     init_loggers();
 
     let mut world = World::new();
-    world.create_entity(
+    let human = world.create_entity(
         "Human",
         &[Recipe::new(vec![Ware::new(WareType::Food, 1)], Vec::new())],
     );
+    world.get_entity_mut(human).add_ware(Ware::new(WareType::Money, 50));
+    world.create_offer(human, Ware::new(WareType::Money, 5), Ware::new(WareType::Food, 1)).expect("Could not create request to buy food");
 
-    info!("\n{:?}", world);
+    info!("{}", world);
 
     println!("Goodbye!");
 }

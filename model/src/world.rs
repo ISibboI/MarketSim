@@ -2,6 +2,8 @@ use crate::{
     entity::{recipe::Recipe, Entity},
     market::Market,
 };
+use crate::ware::Ware;
+use crate::market::OfferId;
 
 pub type EntityId = usize;
 
@@ -27,6 +29,11 @@ impl World {
         self.entities.push(entity);
         entity_id
     }
+
+    pub fn create_offer(&mut self, entity_id: EntityId, offer: Ware, price: Ware) -> Result<OfferId, ()> {
+        let offer = self.entities_mut()[entity_id as usize].remove_ware(offer)?;
+        Ok(self.market_mut().create_offer(offer, price, entity_id))
+    }
 }
 
 // Getters
@@ -45,5 +52,17 @@ impl World {
 
     pub fn market_mut(&mut self) -> &mut Market {
         &mut self.market
+    }
+
+    pub fn entities_market_mut(&mut self) -> (&mut [Entity], &mut Market) {
+        (&mut self.entities, &mut self.market)
+    }
+
+    pub fn get_entity(&self, entity_id: EntityId) -> &Entity {
+        &self.entities[entity_id as usize]
+    }
+
+    pub fn get_entity_mut(&mut self, entity_id: EntityId) -> &mut Entity {
+        &mut self.entities[entity_id as usize]
     }
 }
