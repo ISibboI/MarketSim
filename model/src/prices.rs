@@ -1,5 +1,4 @@
-use crate::ware::{WareAmount, Ware};
-use crate::ware::WareType;
+use crate::ware::{Ware, WareAmount, WareType};
 use std::collections::HashMap;
 
 #[derive(Debug, Clone, Default)]
@@ -44,6 +43,9 @@ impl PriceTable {
     }
 
     pub fn price(&self, ware: &Ware) -> Ware {
-        Ware::new(WareType::Money, ware.amount() * self.single_price(ware.ware_type()))
+        Ware::new(
+            WareType::Money,
+            ware.amount() * self.single_price(ware.ware_type()),
+        )
     }
 }

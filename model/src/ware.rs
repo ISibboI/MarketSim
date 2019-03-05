@@ -283,7 +283,9 @@ impl WareStore {
     }
 
     pub fn iter<'a>(&'a self) -> impl Iterator<Item = Ware> + 'a {
-        self.wares.iter().map(|(ware_type, amount)| Ware::new(*ware_type, *amount))
+        self.wares
+            .iter()
+            .map(|(ware_type, amount)| Ware::new(*ware_type, *amount))
     }
 
     pub fn ware_amount(&self, ware_type: WareType) -> WareAmount {

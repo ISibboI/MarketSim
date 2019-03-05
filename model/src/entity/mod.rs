@@ -1,7 +1,9 @@
-use crate::{entity::recipe::Recipe, ware::Ware};
-use crate::market::OfferId;
-use crate::ware::WareStore;
-use crate::prices::PriceTable;
+use crate::{
+    entity::recipe::Recipe,
+    market::OfferId,
+    prices::PriceTable,
+    ware::{Ware, WareStore},
+};
 
 pub mod recipe;
 

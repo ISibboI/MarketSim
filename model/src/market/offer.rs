@@ -1,5 +1,7 @@
-use crate::{ware::Ware, world::EntityId};
-use crate::ware::WareAmount;
+use crate::{
+    ware::{Ware, WareAmount},
+    world::EntityId,
+};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Offer {
@@ -10,10 +12,18 @@ pub struct Offer {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Copy)]
-pub enum OfferType {Buy, Sell}
+pub enum OfferType {
+    Buy,
+    Sell,
+}
 
 impl Offer {
-    pub fn new(offer: Ware, offer_type: OfferType, price_per_ware: Ware, seller_entity_id: EntityId) -> Self {
+    pub fn new(
+        offer: Ware,
+        offer_type: OfferType,
+        price_per_ware: Ware,
+        seller_entity_id: EntityId,
+    ) -> Self {
         Self {
             offer,
             offer_type,

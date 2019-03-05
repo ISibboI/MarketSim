@@ -1,13 +1,10 @@
-use std::fmt::Display;
-use crate::world::World;
-use crate::entity::Entity;
-use std::fmt::Formatter;
-use std::fmt::Error;
-use std::fmt::Debug;
-use crate::market::Market;
-use crate::market::offer::Offer;
-use crate::ware::{WareType, Ware, WareStore};
-use crate::entity::recipe::Recipe;
+use crate::{
+    entity::{recipe::Recipe, Entity},
+    market::{offer::Offer, Market},
+    ware::{Ware, WareStore, WareType},
+    world::World,
+};
+use std::fmt::{Debug, Display, Error, Formatter};
 
 impl Display for World {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
@@ -27,7 +24,14 @@ impl Display for Entity {
         }
         write!(f, "; ||| Wares n (b/s):")?;
         for ware_type in self.wares().iter_ware_types() {
-            write!(f, " {:?} {} ({}/{})", ware_type, self.wares().ware_amount(ware_type), self.buy_prices().single_price(ware_type), self.sell_prices().single_price(ware_type))?;
+            write!(
+                f,
+                " {:?} {} ({}/{})",
+                ware_type,
+                self.wares().ware_amount(ware_type),
+                self.buy_prices().single_price(ware_type),
+                self.sell_prices().single_price(ware_type)
+            )?;
         }
         Ok(())
     }

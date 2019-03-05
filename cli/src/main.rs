@@ -3,15 +3,15 @@ extern crate model;
 extern crate log;
 extern crate simplelog;
 
+use log::LevelFilter;
 use model::{
     entity::recipe::Recipe,
+    market::offer::OfferType,
     ware::{Ware, WareType},
     world::World,
 };
-use log::LevelFilter;
 use simplelog::{CombinedLogger, Config, TermLogger, WriteLogger};
 use std::fs::File;
-use model::market::offer::OfferType;
 
 fn init_loggers() {
     CombinedLogger::init(vec![
@@ -36,8 +36,17 @@ fn main() {
         "Human",
         &[Recipe::new(vec![Ware::new(WareType::Food, 1)], Vec::new())],
     );
-    world.get_entity_mut(human).add_ware(Ware::new(WareType::Money, 50));
-    world.create_offer(human, Ware::new(WareType::Food, 1), OfferType::Buy, Ware::new(WareType::Money, 5)).expect("Could not create request to buy food");
+    world
+        .get_entity_mut(human)
+        .add_ware(Ware::new(WareType::Money, 50));
+    world
+        .create_offer(
+            human,
+            Ware::new(WareType::Food, 1),
+            OfferType::Buy,
+            Ware::new(WareType::Money, 5),
+        )
+        .expect("Could not create request to buy food");
 
     info!("{}", world);
 
