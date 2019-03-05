@@ -32,7 +32,7 @@ impl WareType {
 
 pub type WareAmount = u32;
 
-#[derive(Default, Clone, Debug)]
+#[derive(Default, Clone, Debug, Eq, PartialEq)]
 pub struct Ware {
     ware_type: WareType,
     amount: WareAmount,
@@ -53,6 +53,10 @@ impl Ware {
 
     pub fn amount_mut(&mut self) -> &mut WareAmount {
         &mut self.amount
+    }
+
+    pub fn is_money(&self) -> bool {
+        self.ware_type().is_money()
     }
 }
 
@@ -208,13 +212,13 @@ impl WareStore {
     pub fn pop_wares(&mut self, wares: WareStore) -> Result<WareStore, ()> {
         trace!("Popping {}", wares);
 
-        for ware_type in wares.iter() {
+        for ware_type in wares.iter_ware_types() {
             if self.ware_amount(ware_type) < wares.ware_amount(ware_type) {
                 return Err(());
             }
         }
 
-        for ware_type in wares.iter() {
+        for ware_type in wares.iter_ware_types() {
             self.pop_ware(wares.get_ware(ware_type).unwrap()).unwrap();
         }
 
@@ -268,14 +272,18 @@ impl WareStore {
     }
 
     fn clean(&mut self) {
-        self.wares.retain(|k, v| *v > 0);
+        self.wares.retain(|_, v| *v > 0);
     }
 }
 
 // Getters
 impl WareStore {
-    pub fn iter<'a>(&'a self) -> impl Iterator<Item = WareType> + 'a {
+    pub fn iter_ware_types<'a>(&'a self) -> impl Iterator<Item = WareType> + 'a {
         self.wares.keys().cloned()
+    }
+
+    pub fn iter<'a>(&'a self) -> impl Iterator<Item = Ware> + 'a {
+        self.wares.iter().map(|(ware_type, amount)| Ware::new(*ware_type, *amount))
     }
 
     pub fn ware_amount(&self, ware_type: WareType) -> WareAmount {

@@ -39,6 +39,10 @@ impl Entity {
     pub fn add_offer_id(&mut self, offer_id: OfferId) {
         self.offer_ids_mut().push(offer_id);
     }
+
+    pub fn clear_offer_ids(&mut self) {
+        self.offer_ids.clear();
+    }
 }
 
 // Getters

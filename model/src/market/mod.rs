@@ -6,7 +6,7 @@ pub mod offer;
 
 pub type OfferId = usize;
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct Market {
     offers: Vec<Offer>,
 }
@@ -21,6 +21,13 @@ impl Market {
         let offer_id = self.offers().len() as OfferId;
         self.offers_mut().push(Offer::new(offer, price, entity_id));
         offer_id
+    }
+}
+
+// Modifiers
+impl Market {
+    pub fn clear_offers(&mut self) {
+        self.offers.clear();
     }
 }
 

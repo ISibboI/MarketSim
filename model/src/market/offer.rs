@@ -1,6 +1,6 @@
 use crate::{ware::Ware, world::EntityId};
 
-#[derive(Default, Debug, Clone)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct Offer {
     offer: Ware,
     price: Ware,

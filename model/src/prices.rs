@@ -1,4 +1,4 @@
-use crate::ware::WareAmount;
+use crate::ware::{WareAmount, Ware};
 use crate::ware::WareType;
 use std::collections::HashMap;
 
@@ -16,7 +16,7 @@ impl PriceTable {
 
 // Modifiers
 impl PriceTable {
-    pub fn set_price(&mut self, ware_type: WareType, price: WareAmount) {
+    pub fn set_single_price(&mut self, ware_type: WareType, price: WareAmount) {
         self.prices_mut().insert(ware_type, price);
     }
 }
@@ -31,11 +31,15 @@ impl PriceTable {
         &mut self.prices
     }
 
-    pub fn get_price(&self, ware_type: WareType) -> WareAmount {
+    pub fn single_price(&self, ware_type: WareType) -> WareAmount {
         if let Some(price) = self.prices().get(&ware_type) {
             *price
         } else {
             ware_type.default_price()
         }
+    }
+
+    pub fn price(&self, ware: &Ware) -> Ware {
+        Ware::new(WareType::Money, ware.amount() * self.single_price(ware.ware_type()))
     }
 }

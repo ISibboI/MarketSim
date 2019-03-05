@@ -26,8 +26,8 @@ impl Display for Entity {
             write!(f, " {}", recipe)?;
         }
         write!(f, "; ||| Wares n (p):")?;
-        for ware_type in self.wares().iter() {
-            write!(f, " {:?} {} ({})", ware_type, self.wares().ware_amount(ware_type), self.prices().get_price(ware_type))?;
+        for ware_type in self.wares().iter_ware_types() {
+            write!(f, " {:?} {} ({})", ware_type, self.wares().ware_amount(ware_type), self.prices().single_price(ware_type))?;
         }
         Ok(())
     }
@@ -90,7 +90,7 @@ impl Display for Ware {
 impl Display for WareStore {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         let mut once = false;
-        for ware_type in self.iter() {
+        for ware_type in self.iter_ware_types() {
             if once {
                 write!(f, "; ")?;
             } else {
