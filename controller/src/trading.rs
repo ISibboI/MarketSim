@@ -1,6 +1,6 @@
 use model::{
     entity::Entity,
-    market::offer::OfferType,
+    market::{offer::OfferType, Market},
     ware::{WareStore, WareType},
     world::World,
 };
@@ -72,6 +72,16 @@ impl Economy for World {
                 ));
             }
         }
+    }
+}
+
+pub trait TotallyFairMarket {
+    fn resolve_trades(&mut self);
+}
+
+impl TotallyFairMarket for Market {
+    fn resolve_trades(&mut self) {
+        unimplemented!()
     }
 }
 

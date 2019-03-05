@@ -8,7 +8,7 @@ pub struct Offer {
     offer: Ware,
     offer_type: OfferType,
     price_per_ware: Ware,
-    seller_entity_id: EntityId,
+    entity_id: EntityId,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Copy)]
@@ -22,18 +22,22 @@ impl Offer {
         offer: Ware,
         offer_type: OfferType,
         price_per_ware: Ware,
-        seller_entity_id: EntityId,
+        entity_id: EntityId,
     ) -> Self {
         Self {
             offer,
             offer_type,
             price_per_ware,
-            seller_entity_id,
+            entity_id,
         }
     }
 
     pub fn offer(&self) -> &Ware {
         &self.offer
+    }
+
+    pub fn offer_type(&self) -> OfferType {
+        self.offer_type
     }
 
     pub fn amount(&self) -> WareAmount {
@@ -50,7 +54,7 @@ impl Offer {
         total_price
     }
 
-    pub fn seller_entity_id(&self) -> EntityId {
-        self.seller_entity_id
+    pub fn entity_id(&self) -> EntityId {
+        self.entity_id
     }
 }
