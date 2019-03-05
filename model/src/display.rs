@@ -6,7 +6,7 @@ use std::fmt::Error;
 use std::fmt::Debug;
 use crate::market::Market;
 use crate::market::offer::Offer;
-use crate::ware::{WareType, Ware};
+use crate::ware::{WareType, Ware, WareStore};
 use crate::entity::recipe::Recipe;
 
 impl Display for World {
@@ -84,5 +84,20 @@ impl Display for Recipe {
 impl Display for Ware {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         write!(f, "{}x {}", self.amount(), self.ware_type())
+    }
+}
+
+impl Display for WareStore {
+    fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
+        let mut once = false;
+        for ware_type in self.iter() {
+            if once {
+                write!(f, "; ")?;
+            } else {
+                once = true;
+            }
+            write!(f, "{}x {}", self.ware_amount(ware_type), ware_type)?;
+        }
+        Ok(())
     }
 }

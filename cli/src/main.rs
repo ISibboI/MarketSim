@@ -40,5 +40,6 @@ fn main() {
 
     info!("{}", world);
 
+    info!("Goodbye!");
     println!("Goodbye!");
 }

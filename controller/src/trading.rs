@@ -16,6 +16,8 @@ impl Trader for Entity {
                 demands.push_ware(input.clone());
             }
         }
+
+        let _leftover_wares = self.wares().clone().pop_wares_max(&mut demands);
     }
 }
 
