@@ -9,7 +9,8 @@ pub mod recipe;
 pub struct Entity {
     name: String,
     wares: WareStore,
-    prices: PriceTable,
+    buy_prices: PriceTable,
+    sell_prices: PriceTable,
     recipes: Vec<Recipe>,
     offer_ids: Vec<OfferId>,
 }
@@ -20,7 +21,8 @@ impl Entity {
         Entity {
             name,
             wares: Default::default(),
-            prices: Default::default(),
+            buy_prices: Default::default(),
+            sell_prices: Default::default(),
             recipes,
             offer_ids: Default::default(),
         }
@@ -59,8 +61,12 @@ impl Entity {
         &mut self.wares
     }
 
-    pub fn prices(&self) -> &PriceTable {
-        &self.prices
+    pub fn buy_prices(&self) -> &PriceTable {
+        &self.buy_prices
+    }
+
+    pub fn sell_prices(&self) -> &PriceTable {
+        &self.sell_prices
     }
 
     pub fn recipes(&self) -> &[Recipe] {

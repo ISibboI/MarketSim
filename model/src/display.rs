@@ -25,9 +25,9 @@ impl Display for Entity {
         for recipe in self.recipes() {
             write!(f, " {}", recipe)?;
         }
-        write!(f, "; ||| Wares n (p):")?;
+        write!(f, "; ||| Wares n (b/s):")?;
         for ware_type in self.wares().iter_ware_types() {
-            write!(f, " {:?} {} ({})", ware_type, self.wares().ware_amount(ware_type), self.prices().single_price(ware_type))?;
+            write!(f, " {:?} {} ({}/{})", ware_type, self.wares().ware_amount(ware_type), self.buy_prices().single_price(ware_type), self.sell_prices().single_price(ware_type))?;
         }
         Ok(())
     }
@@ -45,7 +45,7 @@ impl Display for Market {
 
 impl Display for Offer {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
-        write!(f, "{} -> {}", self.offer(), self.price())
+        write!(f, "{} -> {}", self.offer(), self.price_per_ware())
     }
 }
 

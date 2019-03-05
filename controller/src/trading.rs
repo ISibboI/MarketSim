@@ -1,6 +1,7 @@
 use model::entity::Entity;
 use model::world::World;
 use model::ware::{WareStore, WareType};
+use model::market::offer::OfferType;
 
 pub trait Trader {
     fn tradable_wares_and_unmet_demands(&self) -> (WareStore, WareStore);
@@ -41,8 +42,8 @@ impl Economy for World {
                     continue;
                 }
 
-                let price = entity.prices().price(&tradable_ware);
-                entity.add_offer_id(market.create_offer(tradable_ware, price, entity_id));
+                let price_per_ware = entity.sell_prices().single_price_as_ware(&tradable_ware);
+                entity.add_offer_id(market.create_offer(tradable_ware, OfferType::Sell, price_per_ware, entity_id));
             }
 
             let mut money = tradable_wares.ware_amount(WareType::Money);
@@ -51,7 +52,12 @@ impl Economy for World {
                     continue;
                 }
 
-
+                let price_per_ware = entity.buy_prices().single_price_as_ware(&unmet_demand);
+                let max_buy = money / price_per_ware.amount();
+                let mut unmet_demand = unmet_demand.clone();
+                *unmet_demand.amount_mut() = unmet_demand.amount().min(max_buy);
+                money -= unmet_demand.amount() * price_per_ware.amount();
+                entity.add_offer_id(market.create_offer(unmet_demand, OfferType::Buy, price_per_ware, entity_id));
             }
         }
     }
@@ -65,6 +71,7 @@ mod test {
     use crate::trading::{Economy, Trader};
     use model::market::Market;
     use model::entity::Entity;
+    use model::market::offer::OfferType;
 
     #[test]
     fn test_tradable_wares_and_unmet_demands() {
@@ -88,8 +95,8 @@ mod test {
         world.update_market_offers();
 
         let mut market = Market::new();
-        market.create_offer(Ware::new(WareType::Money, 5), Ware::new(WareType::Food, 1), 0);
-        market.create_offer(Ware::new(WareType::Food, 10), Ware::new(WareType::Money, 50), 1);
+        market.create_offer(Ware::new(WareType::Food, 1), OfferType::Buy, Ware::new(WareType::Money, 5), 0);
+        market.create_offer(Ware::new(WareType::Food, 10), OfferType::Sell, Ware::new(WareType::Money, 5), 1);
 
         assert_eq!(&market, world.market());
     }

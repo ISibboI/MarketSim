@@ -11,6 +11,7 @@ use model::{
 use log::LevelFilter;
 use simplelog::{CombinedLogger, Config, TermLogger, WriteLogger};
 use std::fs::File;
+use model::market::offer::OfferType;
 
 fn init_loggers() {
     CombinedLogger::init(vec![
@@ -36,7 +37,7 @@ fn main() {
         &[Recipe::new(vec![Ware::new(WareType::Food, 1)], Vec::new())],
     );
     world.get_entity_mut(human).add_ware(Ware::new(WareType::Money, 50));
-    world.create_offer(human, Ware::new(WareType::Money, 5), Ware::new(WareType::Food, 1)).expect("Could not create request to buy food");
+    world.create_offer(human, Ware::new(WareType::Food, 1), OfferType::Buy, Ware::new(WareType::Money, 5)).expect("Could not create request to buy food");
 
     info!("{}", world);
 

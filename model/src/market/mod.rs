@@ -1,4 +1,4 @@
-use crate::market::offer::Offer;
+use crate::market::offer::{Offer, OfferType};
 use crate::ware::Ware;
 use crate::world::EntityId;
 
@@ -17,9 +17,11 @@ impl Market {
         Default::default()
     }
 
-    pub fn create_offer(&mut self, offer: Ware, price: Ware, entity_id: EntityId) -> OfferId {
+    pub fn create_offer(&mut self, offer: Ware, offer_type: OfferType, price_per_ware: Ware, entity_id: EntityId) -> OfferId {
+        debug_assert_ne!(offer.amount(), 0);
+
         let offer_id = self.offers().len() as OfferId;
-        self.offers_mut().push(Offer::new(offer, price, entity_id));
+        self.offers_mut().push(Offer::new(offer, offer_type, price_per_ware, entity_id));
         offer_id
     }
 }

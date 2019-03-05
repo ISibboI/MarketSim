@@ -39,6 +39,10 @@ impl PriceTable {
         }
     }
 
+    pub fn single_price_as_ware(&self, ware: &Ware) -> Ware {
+        Ware::new(WareType::Money, self.single_price(ware.ware_type()))
+    }
+
     pub fn price(&self, ware: &Ware) -> Ware {
         Ware::new(WareType::Money, ware.amount() * self.single_price(ware.ware_type()))
     }
