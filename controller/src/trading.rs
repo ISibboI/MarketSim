@@ -8,7 +8,7 @@ pub trait Trader {
 }
 
 impl Trader for Entity {
-    fn create_offers(&mut self, market: &mut Market) {
+    fn create_offers(&mut self, _market: &mut Market) {
         let mut demands = WareStore::new();
 
         for recipe in self.recipes() {
