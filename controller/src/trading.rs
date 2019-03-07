@@ -153,7 +153,5 @@ mod test {
     }
 
     #[test]
-    fn test_resolve_trades() {
-
-    }
+    fn test_resolve_trades() {}
 }

@@ -10,6 +10,7 @@ extern crate failure;
 
 pub mod display;
 pub mod entity;
+pub mod from_str;
 pub mod market;
 pub mod prices;
 pub mod ware;
