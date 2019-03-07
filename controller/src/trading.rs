@@ -72,6 +72,8 @@ impl Economy for World {
                 ));
             }
         }
+
+        market.sort_offers();
     }
 }
 
@@ -81,6 +83,7 @@ pub trait TotallyFairMarket {
 
 impl TotallyFairMarket for Market {
     fn resolve_trades(&mut self) {
+        println!("{}", self);
         unimplemented!()
     }
 }
@@ -147,5 +150,10 @@ mod test {
         );
 
         assert_eq!(&market, world.market());
+    }
+
+    #[test]
+    fn test_resolve_trades() {
+
     }
 }
