@@ -1,6 +1,9 @@
 use crate::{
     entity::{recipe::Recipe, Entity},
-    market::{offer::Offer, Market},
+    market::{
+        offer::{Offer, OfferType},
+        Market,
+    },
     ware::{Ware, WareStore, WareType},
     world::World,
 };
@@ -49,7 +52,11 @@ impl Display for Market {
 
 impl Display for Offer {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
-        write!(f, "{} -> {}", self.offer(), self.price_per_ware())
+        match self.offer_type() {
+            OfferType::Buy => write!(f, "BUY ")?,
+            OfferType::Sell => write!(f, "SELL ")?,
+        };
+        write!(f, "{} at {}/unit", self.offer(), self.price_per_ware())
     }
 }
 

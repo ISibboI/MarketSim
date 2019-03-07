@@ -42,7 +42,7 @@ impl Market {
         self.offers_mut().clear();
     }
 
-    pub fn order_offers(&mut self) {
+    pub fn sort_offers(&mut self) {
         self.offers_mut().sort_by(
             |a, b| match a.offer().ware_type().cmp(&b.offer().ware_type()) {
                 Ordering::Equal => {
@@ -82,6 +82,7 @@ mod test {
         ware::{Ware, WareType},
     };
     use rand::{distributions::Uniform, seq::SliceRandom, Rng};
+    use std::cmp::Ordering;
 
     #[test]
     fn test_order_offers() {
@@ -105,6 +106,24 @@ mod test {
             );
         }
 
-        assert!(false);
+        market.sort_offers();
+        assert!(market.offers().is_sorted_by(|a, b| Some(
+            match a.offer().ware_type().cmp(&b.offer().ware_type()) {
+                Ordering::Equal => {
+                    if a.offer_type() != b.offer_type() {
+                        if a.offer_type() == OfferType::Buy {
+                            Ordering::Less
+                        } else {
+                            Ordering::Greater
+                        }
+                    } else {
+                        a.price_per_ware()
+                            .amount()
+                            .cmp(&b.price_per_ware().amount())
+                    }
+                }
+                o => o,
+            }
+        )));
     }
 }
