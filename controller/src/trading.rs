@@ -94,9 +94,11 @@ mod test {
     use model::{
         entity::{recipe::Recipe, Entity},
         market::{offer::OfferType, Market},
+        templates::{EATING_RECIPE, FOOD_CREATOR_RECIPE},
         ware::{Ware, WareStore, WareType},
         world::World,
     };
+    use std::str::FromStr;
 
     #[test]
     fn test_tradable_wares_and_unmet_demands() {
@@ -153,5 +155,25 @@ mod test {
     }
 
     #[test]
-    fn test_resolve_trades() {}
+    fn test_resolve_trades() {
+        let mut world = World::new();
+        let humans: Vec<_> = (0..10)
+            .map(|i| {
+                world.create_entity(
+                    &format!("Human {}", i),
+                    &[Recipe::from_str(EATING_RECIPE).unwrap()],
+                )
+            })
+            .collect();
+        let food_creators: Vec<_> = (0..10)
+            .map(|i| {
+                world.create_entity(
+                    &format!("Food Creator {}", i),
+                    &[Recipe::from_str(FOOD_CREATOR_RECIPE).unwrap()],
+                )
+            })
+            .collect();
+
+        unimplemented!()
+    }
 }

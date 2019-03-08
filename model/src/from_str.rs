@@ -59,23 +59,29 @@ impl FromStr for Recipe {
 
         let inputs = s[..arrow].trim();
         let inputs = &inputs[1..inputs.len() - 1];
-        let input_results: Vec<_> = inputs.split(";").map(|s| Ware::from_str(s.trim())).collect();
+        let input_results: Vec<_> = inputs
+            .split(";")
+            .map(|s| Ware::from_str(s.trim()))
+            .collect();
         let mut inputs = Vec::new();
         for result in input_results {
             match result {
                 Ok(w) => inputs.push(w),
-                Err(e) => return Err(format!("Could not parse ware declarations: {}", e))
+                Err(e) => return Err(format!("Could not parse ware declarations: {}", e)),
             }
         }
 
         let outputs = s[arrow + 2..].trim();
         let outputs = &outputs[1..outputs.len() - 1];
-        let output_results: Vec<_> = outputs.split(";").map(|s| Ware::from_str(s.trim())).collect();
+        let output_results: Vec<_> = outputs
+            .split(";")
+            .map(|s| Ware::from_str(s.trim()))
+            .collect();
         let mut outputs = Vec::new();
         for result in output_results {
             match result {
                 Ok(w) => outputs.push(w),
-                Err(e) => return Err(format!("Could not parse ware declarations: {}", e))
+                Err(e) => return Err(format!("Could not parse ware declarations: {}", e)),
             }
         }
 
