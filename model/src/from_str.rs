@@ -54,12 +54,31 @@ impl FromStr for Recipe {
         let s = s.trim();
         let arrow = match s.find("->") {
             Some(arrow) => arrow,
-            None => return Err(format!("")),
+            None => return Err(format!("Missing arrow (->) in recipe declaration")),
         };
-        let inputs = s[..arrow].trim();
-        let inputs = &s[1..inputs.len() - 1];
-        let inputs = inputs.split(";");
 
-        unimplemented!()
+        let inputs = s[..arrow].trim();
+        let inputs = &inputs[1..inputs.len() - 1];
+        let input_results: Vec<_> = inputs.split(";").map(|s| Ware::from_str(s.trim())).collect();
+        let mut inputs = Vec::new();
+        for result in input_results {
+            match result {
+                Ok(w) => inputs.push(w),
+                Err(e) => return Err(format!("Could not parse ware declarations: {}", e))
+            }
+        }
+
+        let outputs = s[arrow + 2..].trim();
+        let outputs = &outputs[1..outputs.len() - 1];
+        let output_results: Vec<_> = outputs.split(";").map(|s| Ware::from_str(s.trim())).collect();
+        let mut outputs = Vec::new();
+        for result in output_results {
+            match result {
+                Ok(w) => outputs.push(w),
+                Err(e) => return Err(format!("Could not parse ware declarations: {}", e))
+            }
+        }
+
+        Ok(Recipe::new(inputs, outputs))
     }
 }

@@ -6,7 +6,6 @@ extern crate log;
 extern crate custom_derive;
 #[macro_use]
 extern crate enum_derive;
-extern crate failure;
 
 pub mod display;
 pub mod entity;

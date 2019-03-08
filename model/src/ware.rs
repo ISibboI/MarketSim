@@ -1,5 +1,4 @@
-use failure::Error;
-use std::{collections::HashMap, ops::Mul, str::FromStr};
+use std::{collections::HashMap, ops::Mul};
 
 custom_derive! {
     #[derive(Clone, Debug, Copy, Hash, PartialEq, Eq, Ord, PartialOrd, IterVariants(WareTypeVariants), EnumFromStr)]
