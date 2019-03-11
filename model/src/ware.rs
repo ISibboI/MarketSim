@@ -45,6 +45,10 @@ impl Ware {
         Self { ware_type, amount }
     }
 
+    pub fn money(amount: WareAmount) -> Self {
+        Self::new(WareType::Money, amount)
+    }
+
     pub fn ware_type(&self) -> WareType {
         self.ware_type
     }

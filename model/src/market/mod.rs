@@ -1,7 +1,7 @@
 use crate::{
     market::{
         offer::{Offer, OfferType},
-        ware_range_iter::{WareOfferRange, WareRangeIter},
+        ware_range_iter::{WareOfferRange, WareOfferRangeMut, WareRangeIter, WareRangeIterMut},
     },
     ware::Ware,
     world::EntityId,
@@ -69,6 +69,12 @@ impl Market {
 
     fn offers_mut(&mut self) -> &mut Vec<Offer> {
         &mut self.offers
+    }
+
+    pub fn iter_ware_ranges_mut<'a>(
+        &'a mut self,
+    ) -> impl Iterator<Item = WareOfferRangeMut<'a>> + 'a {
+        WareRangeIterMut::from(self)
     }
 }
 

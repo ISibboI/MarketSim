@@ -1,9 +1,11 @@
 use model::{
     entity::Entity,
     market::{offer::OfferType, Market},
-    ware::{WareStore, WareType},
+    ware::{WareAmount, WareStore, WareType},
     world::World,
 };
+use rand::seq::SliceRandom;
+use std::cmp::Ordering;
 
 pub trait Trader {
     fn tradable_wares_and_unmet_demands(&self) -> (WareStore, WareStore);
@@ -54,6 +56,9 @@ impl Economy for World {
             }
 
             let mut money = tradable_wares.ware_amount(WareType::Money);
+            let mut unmet_demands: Vec<_> = unmet_demands.iter().collect();
+            unmet_demands.shuffle(&mut rand::thread_rng());
+
             for unmet_demand in unmet_demands.iter() {
                 if unmet_demand.is_money() {
                     continue;
@@ -79,23 +84,56 @@ impl Economy for World {
     }
 }
 
-pub trait TotallyFairMarket {
+pub trait RandomizedMarket {
     fn resolve_trades(&mut self);
 }
 
-impl TotallyFairMarket for Market {
+impl RandomizedMarket for Market {
     fn resolve_trades(&mut self) {
         println!("{}", self);
 
-        for ware_range in self.iter_ware_ranges() {}
+        for ware_range in self.iter_ware_ranges_mut() {
+            // Iterate over minimum price of sell offers.
+            let sell_offer_limits = ware_range.sell_offer_limits();
+
+            for sell_offer_limit in sell_offer_limits {
+                let sell_offer_size: WareAmount = sell_offer_limit
+                    .sell_slice(ware_range.sell_offers())
+                    .iter()
+                    .map(|offer| offer.amount())
+                    .sum();
+                let buy_offer_size: WareAmount = sell_offer_limit
+                    .buy_slice(ware_range.buy_offers())
+                    .iter()
+                    .map(|offer| offer.amount())
+                    .sum();
+
+                match sell_offer_size.cmp(&buy_offer_size) {
+                    Ordering::Equal => {
+                        // Fulfill all offers at minimum price.
+                    }
+                    _ => unimplemented!(),
+                }
+            }
+
+            // Fulfill the offers fairly at random, using GSL::multinomial() to deal out the minority to the majority.
+
+            // Offers are fulfilled at minimum price.
+        }
 
         unimplemented!()
     }
 }
 
+impl RandomizedMarket for World {
+    fn resolve_trades(&mut self) {
+        self.market_mut().resolve_trades()
+    }
+}
+
 #[cfg(test)]
 mod test {
-    use crate::trading::{Economy, TotallyFairMarket, Trader};
+    use crate::trading::{Economy, RandomizedMarket, Trader};
     use model::{
         entity::{recipe::Recipe, Entity},
         market::{offer::OfferType, Market},
@@ -103,7 +141,8 @@ mod test {
         ware::{Ware, WareStore, WareType},
         world::World,
     };
-    use rand::{distributions::Uniform, Rng, SeedableRng, StdRng};
+    use rand::{distributions::Uniform, Rng, SeedableRng};
+    use rand_pcg::Pcg64Mcg;
     use std::str::FromStr;
 
     #[test]
@@ -161,8 +200,25 @@ mod test {
     }
 
     #[test]
+    fn test_update_market_offers_no_redundant_offers() {
+        let mut world = World::new();
+        let eating_recipe = Recipe::from_str(EATING_RECIPE).unwrap();
+        world.create_entity(
+            "Human",
+            &[
+                eating_recipe.clone(),
+                eating_recipe.clone(),
+                eating_recipe.clone(),
+            ],
+        );
+        world.get_entity_mut(0).add_ware(Ware::money(100));
+        world.update_market_offers();
+        assert_eq!(world.market().offers().len(), 1);
+    }
+
+    #[test]
     fn test_resolve_trades() {
-        let mut rng: StdRng = SeedableRng::from_seed([0; 32]);
+        let mut rng: Pcg64Mcg = SeedableRng::from_seed([0; 16]);
         let food_price_distribution = Uniform::new_inclusive(4, 6);
         let mut world = World::new();
         let humans: Vec<_> = (0..10)
