@@ -47,6 +47,22 @@ impl Entity {
     pub fn clear_offer_ids(&mut self) {
         self.offer_ids.clear();
     }
+
+    fn offer_ids_mut(&mut self) -> &mut Vec<OfferId> {
+        &mut self.offer_ids
+    }
+
+    fn wares_mut(&mut self) -> &mut WareStore {
+        &mut self.wares
+    }
+
+    pub fn buy_prices_mut(&mut self) -> &mut PriceTable {
+        &mut self.buy_prices
+    }
+
+    pub fn sell_prices_mut(&mut self) -> &mut PriceTable {
+        &mut self.sell_prices
+    }
 }
 
 // Getters
@@ -57,10 +73,6 @@ impl Entity {
 
     pub fn wares(&self) -> &WareStore {
         &self.wares
-    }
-
-    fn wares_mut(&mut self) -> &mut WareStore {
-        &mut self.wares
     }
 
     pub fn buy_prices(&self) -> &PriceTable {
@@ -77,9 +89,5 @@ impl Entity {
 
     pub fn offer_ids(&self) -> &[OfferId] {
         &self.offer_ids
-    }
-
-    fn offer_ids_mut(&mut self) -> &mut Vec<OfferId> {
-        &mut self.offer_ids
     }
 }

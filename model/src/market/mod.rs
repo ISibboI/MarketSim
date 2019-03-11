@@ -1,11 +1,15 @@
 use crate::{
-    market::offer::{Offer, OfferType},
+    market::{
+        offer::{Offer, OfferType},
+        ware_range_iter::{WareOfferRange, WareRangeIter},
+    },
     ware::Ware,
     world::EntityId,
 };
 use std::cmp::Ordering;
 
 pub mod offer;
+pub mod ware_range_iter;
 
 pub type OfferId = usize;
 
@@ -62,6 +66,10 @@ impl Market {
             },
         );
     }
+
+    fn offers_mut(&mut self) -> &mut Vec<Offer> {
+        &mut self.offers
+    }
 }
 
 // Getters
@@ -70,8 +78,8 @@ impl Market {
         &self.offers
     }
 
-    fn offers_mut(&mut self) -> &mut Vec<Offer> {
-        &mut self.offers
+    pub fn iter_ware_ranges<'a>(&'a self) -> impl Iterator<Item = WareOfferRange<'a>> + 'a {
+        WareRangeIter::from(self)
     }
 }
 

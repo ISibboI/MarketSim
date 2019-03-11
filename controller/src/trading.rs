@@ -86,6 +86,9 @@ pub trait TotallyFairMarket {
 impl TotallyFairMarket for Market {
     fn resolve_trades(&mut self) {
         println!("{}", self);
+
+        for ware_range in self.iter_ware_ranges() {}
+
         unimplemented!()
     }
 }
@@ -100,6 +103,7 @@ mod test {
         ware::{Ware, WareStore, WareType},
         world::World,
     };
+    use rand::{distributions::Uniform, Rng, SeedableRng, StdRng};
     use std::str::FromStr;
 
     #[test]
@@ -158,6 +162,8 @@ mod test {
 
     #[test]
     fn test_resolve_trades() {
+        let mut rng: StdRng = SeedableRng::from_seed([0; 32]);
+        let food_price_distribution = Uniform::new_inclusive(4, 6);
         let mut world = World::new();
         let humans: Vec<_> = (0..10)
             .map(|i| {
@@ -177,11 +183,24 @@ mod test {
             .collect();
 
         for &human_id in &humans {
-            world.get_entity_mut(human_id).add_ware(Ware::new(WareType::Money, 50));
+            world
+                .get_entity_mut(human_id)
+                .add_ware(Ware::new(WareType::Money, 50));
         }
 
         for &food_creator_id in &food_creators {
-            world.get_entity_mut(food_creator_id).add_ware(Ware::new(WareType::Food, 10));
+            world
+                .get_entity_mut(food_creator_id)
+                .add_ware(Ware::new(WareType::Food, 10));
+        }
+
+        for entity in world.entities_mut() {
+            entity
+                .buy_prices_mut()
+                .set_single_price(WareType::Food, rng.sample(food_price_distribution) + 1);
+            entity
+                .sell_prices_mut()
+                .set_single_price(WareType::Food, rng.sample(food_price_distribution));
         }
 
         world.update_market_offers();
