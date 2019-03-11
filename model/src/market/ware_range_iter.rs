@@ -2,7 +2,6 @@ use crate::market::{
     offer::{Offer, OfferType},
     Market,
 };
-use std::mem;
 
 #[derive(Default, Clone, Debug)]
 pub struct WareRangeIter<'a> {
@@ -101,10 +100,6 @@ impl<'a> Iterator for WareRangeIterMut<'a> {
 
     fn next<'s>(&'s mut self) -> Option<Self::Item> {
         if let Some(first_offer) = self.offers.first().cloned() {
-            let mut dummy = Vec::new();
-            let mut dummy_slice_mut = dummy.as_mut_slice();
-            mem::swap(&mut dummy_slice_mut, &mut self.offers);
-
             let count = self
                 .offers
                 .iter()
@@ -114,8 +109,8 @@ impl<'a> Iterator for WareRangeIterMut<'a> {
                         && offer.offer_type() == OfferType::Buy
                 })
                 .count();
-            let (buy_offers, new_offers) = dummy_slice_mut.split_at_mut(count);
-            dummy_slice_mut = new_offers;
+            let (buy_offers, new_offers) = self.offers.split_at_mut(count);
+            self.offers = new_offers;
 
             let count = self
                 .offers
@@ -125,10 +120,9 @@ impl<'a> Iterator for WareRangeIterMut<'a> {
                         && offer.offer_type() == OfferType::Sell
                 })
                 .count();
-            let (sell_offers, new_offers) = dummy_slice_mut.split_at_mut(count);
-            dummy_slice_mut = new_offers;
+            let (sell_offers, new_offers) = self.offers.split_at_mut(count);
+            self.offers = new_offers;
 
-            mem::swap(&mut dummy_slice_mut, &mut self.offers);
             Some(WareOfferRangeMut::new(buy_offers, sell_offers))
         } else {
             None
