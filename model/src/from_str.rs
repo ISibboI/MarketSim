@@ -28,7 +28,7 @@ impl FromStr for Ware {
         let s = s.trim();
         let x = match s.find('x') {
             Some(x) => x,
-            None => return Err("End of amount delimiter 'x' not found".to_owned()),
+            None => return Err(format!("End of amount delimiter 'x' not found: '{}'", s)),
         };
         let amount: WareAmount = match s[..x].parse() {
             Ok(amount) => amount,
@@ -61,7 +61,14 @@ impl FromStr for Recipe {
         let inputs = &inputs[1..inputs.len() - 1];
         let input_results: Vec<_> = inputs
             .split(";")
-            .map(|s| Ware::from_str(s.trim()))
+            .filter_map(|s| {
+                let s = s.trim();
+                if s.is_empty() {
+                    None
+                } else {
+                    Some(Ware::from_str(s.trim()))
+                }
+            })
             .collect();
         let mut inputs = Vec::new();
         for result in input_results {
@@ -75,7 +82,14 @@ impl FromStr for Recipe {
         let outputs = &outputs[1..outputs.len() - 1];
         let output_results: Vec<_> = outputs
             .split(";")
-            .map(|s| Ware::from_str(s.trim()))
+            .filter_map(|s| {
+                let s = s.trim();
+                if s.is_empty() {
+                    None
+                } else {
+                    Some(Ware::from_str(s.trim()))
+                }
+            })
             .collect();
         let mut outputs = Vec::new();
         for result in output_results {

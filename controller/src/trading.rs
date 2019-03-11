@@ -63,13 +63,15 @@ impl Economy for World {
                 let max_buy = money / price_per_ware.amount();
                 let mut unmet_demand = unmet_demand.clone();
                 *unmet_demand.amount_mut() = unmet_demand.amount().min(max_buy);
-                money -= unmet_demand.amount() * price_per_ware.amount();
-                entity.add_offer_id(market.create_offer(
-                    unmet_demand,
-                    OfferType::Buy,
-                    price_per_ware,
-                    entity_id,
-                ));
+                if unmet_demand.amount() > 0 {
+                    money -= unmet_demand.amount() * price_per_ware.amount();
+                    entity.add_offer_id(market.create_offer(
+                        unmet_demand,
+                        OfferType::Buy,
+                        price_per_ware,
+                        entity_id,
+                    ));
+                }
             }
         }
 
@@ -90,7 +92,7 @@ impl TotallyFairMarket for Market {
 
 #[cfg(test)]
 mod test {
-    use crate::trading::{Economy, Trader};
+    use crate::trading::{Economy, TotallyFairMarket, Trader};
     use model::{
         entity::{recipe::Recipe, Entity},
         market::{offer::OfferType, Market},
@@ -173,6 +175,17 @@ mod test {
                 )
             })
             .collect();
+
+        for &human_id in &humans {
+            world.get_entity_mut(human_id).add_ware(Ware::new(WareType::Money, 50));
+        }
+
+        for &food_creator_id in &food_creators {
+            world.get_entity_mut(food_creator_id).add_ware(Ware::new(WareType::Food, 10));
+        }
+
+        world.update_market_offers();
+        world.market_mut().resolve_trades();
 
         unimplemented!()
     }
