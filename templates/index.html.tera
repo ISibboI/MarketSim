@@ -1,0 +1,23 @@
+<head>
+    <title>MarketSim</title>
+    <script src="static/plotly-latest.min.js"></script>
+</head>
+<body>
+Hello!
+
+<div id="tester" style="width:100%;height:100%;"></div>
+
+<script>
+    function update_plot() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("GET", "api/update.json", true);
+        xhttp.onload = function() {
+            TESTER = document.getElementById('tester');
+            Plotly.newPlot( TESTER, [JSON.parse(xhttp.responseText)], { margin: { t: 0 } } );
+        }
+        xhttp.send();
+    }
+
+    window.setInterval(update_plot, 1000);
+</script>
+</body>

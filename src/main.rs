@@ -1,48 +1,74 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
-use std::vec::Vec;
-use simplelog::{CombinedLogger, TermLogger, WriteLogger, Config};
-use log::LevelFilter;
-use std::fs::File;
-
-#[macro_use]
-extern crate rocket;
 #[macro_use]
 extern crate derive_new;
 #[macro_use]
-extern crate log;
-extern crate simplelog;
+extern crate rocket;
+#[macro_use]
+extern crate serde_derive;
+extern crate serde;
+extern crate rocket_contrib;
+extern crate serde_json;
+
+use rocket_contrib::templates::Template;
+use std::vec::Vec;
+use rocket_contrib::serve::StaticFiles;
+use std::collections::HashMap;
+use rocket_contrib::json::Json;
+use rocket::State;
+use std::borrow::BorrowMut;
+use std::sync::Mutex;
 
 #[derive(Debug, Clone, new)]
 struct Buyer {
-	pub max_price: i32,
-	pub expected_price: i32,
+    pub max_price: i32,
+    pub expected_price: i32,
 }
 
 #[derive(Debug, Clone, new)]
 struct Seller {
-	pub min_price: i32,
-	pub expected_price: i32,
+    pub min_price: i32,
+    pub expected_price: i32,
 }
 
-#[get("/")]
-fn index() -> &'static str {
-	"Hello, world!"
+#[derive(Serialize)]
+struct ApiResponse {
+    x: Vec<f32>,
+    y: Vec<f32>,
+}
+
+#[derive(new)]
+struct SimulationState {
+    #[new(default)]
+    buyers: Vec<Buyer>,
+    #[new(default)]
+    sellers: Vec<Seller>,
+}
+
+#[get("/<method>")]
+fn api(method: String, state: State<Mutex<SimulationState>>) -> Json<ApiResponse> {
+    match method.as_str() {
+        "update" => Json(update(&mut state.lock().unwrap())),
+        method => Json(update(&mut state.lock().unwrap())),
+    }
+}
+
+#[get("/index.html")]
+fn index() -> Template {
+    let mut context = HashMap::new();
+    context.insert("", "");
+    Template::render("index", context)
+}
+
+fn update(state: &mut SimulationState) -> ApiResponse {
+    ApiResponse {x: vec![0.0, 1.0, 2.0, 3.0, 4.0], y: vec![1.0, 2.0, 4.0, 9.0, 16.0]}
 }
 
 fn main() {
-	info!("Hello!");
-
-	CombinedLogger::init(
-		vec![
-			TermLogger::new(LevelFilter::Trace, Config::default()).unwrap(),
-			// WriteLogger::new(LevelFilter::Info, Config::default(), File::create("marketsim.log").unwrap()),
-		]
-	).unwrap();
-
-	let buyers = vec![Buyer::new(10, 5)];
-	let sellers = vec![Seller::new(2, 8)];
-
-	rocket::ignite().mount("/", routes![index]).launch();
-	info!("Goodbye!");
+    rocket::ignite()
+        .mount("/static", StaticFiles::from("static"))
+        .mount("/", routes![index])
+        .mount("/api", routes![api])
+        .attach(Template::fairing())
+        .launch();
 }
