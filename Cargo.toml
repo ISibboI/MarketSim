@@ -1,3 +1,11 @@
-[workspace]
+[package]
+name = "marketsim"
+version = "0.1.0"
+authors = ["Sebastian Schmidt <isibboi@gmail.com>"]
+edition = "2018"
 
-members = ["model", "controller", "cli"]
+[dependencies]
+log = "0.4"
+simplelog = "0.5"
+rand = "0.7"
+derive-new = "0.5"
