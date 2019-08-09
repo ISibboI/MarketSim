@@ -2,8 +2,7 @@
     <title>MarketSim</title>
     <script src="static/plotly-latest.min.js"></script>
 </head>
-<body>
-Hello!
+Hello! <button type="button" onclick="script:update_plot()">Update</button>
 
 <div id="tester" style="width:100%;height:100%;"></div>
 
@@ -13,7 +12,7 @@ Hello!
         xhttp.open("GET", "api/update.json", true);
         xhttp.onload = function() {
             TESTER = document.getElementById('tester');
-            Plotly.newPlot( TESTER, [JSON.parse(xhttp.responseText)], { margin: { t: 0 } } );
+            Plotly.newPlot( TESTER, [JSON.parse(xhttp.responseText)], { margin: { t: 0 }, showlegend: true, legend: {x:0.01 , y:1.0}, xaxis: {title:"Day"}, yaxis:{title:"Price [€]"} } );
         }
         xhttp.send();
     }

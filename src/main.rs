@@ -11,18 +11,26 @@ extern crate rocket_contrib;
 extern crate serde_json;
 #[macro_use]
 extern crate getset;
+extern crate ordslice;
+extern crate rand;
 
 mod frontend;
 mod simulation;
 
 use crate::simulation::simulation_state::{SimulationState};
-use crate::simulation::simulation_state::entities::{BuyerProperties, SellerProperties};
+use rand::distributions::Uniform;
+use rand::Rng;
 
 
 fn main() {
     let mut initial_simulation_state = SimulationState::default();
-    initial_simulation_state.add_buyer(10.into());
-    initial_simulation_state.add_seller(5.into());
+    let mut rng = rand::thread_rng();
+    let buyer_distribution = Uniform::new_inclusive(10, 100);
+    let seller_distribution = Uniform::new_inclusive(5, 50);
+
+    for _ in 0..100 {initial_simulation_state.add_buyer(rng.sample(buyer_distribution).into());}
+    for _ in 0..100 {initial_simulation_state.add_seller(rng.sample(seller_distribution).into());}
+    initial_simulation_state.add_buyer(11.into());
 
     frontend::run(initial_simulation_state);
 }

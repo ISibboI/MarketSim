@@ -20,6 +20,30 @@ pub struct Seller {
     #[get = "pub"] #[get_mut = "pub"] properties: SellerProperties,
 }
 
+impl Buyer {
+    pub fn increase_expected_price(&mut self) {
+        if self.expected_price < self.properties.max_price {
+            self.expected_price += 1;
+        }
+    }
+
+    pub fn decrease_expected_price(&mut self) {
+        self.expected_price -= 1;
+    }
+}
+
+impl Seller {
+    pub fn increase_expected_price(&mut self) {
+        self.expected_price += 1;
+    }
+
+    pub fn decrease_expected_price(&mut self) {
+        if self.expected_price > self.properties.min_price {
+            self.expected_price -= 1;
+        }
+    }
+}
+
 impl From<BuyerProperties> for Buyer {
     fn from(properties: BuyerProperties) -> Self {
         Buyer {expected_price: properties.max_price, properties}

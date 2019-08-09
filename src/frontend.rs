@@ -12,12 +12,14 @@ use crate::simulation::simulation_state::SimulationState;
 pub struct ApiResponse {
     x: Vec<f32>,
     y: Vec<f32>,
+    name: String,
 }
 
 impl ApiResponse {
-    pub fn add_point(&mut self, x: f32, y: f32) {
-        self.x.push(x);
+    pub fn add_point(&mut self, y: f32) {
+        self.x.push(self.x.len() as f32);
         self.y.push(y);
+        self.name = String::from("Food Price");
     }
 }
 
